@@ -7,6 +7,7 @@
 //
 
 #import "Partition.h"
+#import "JCDataConvert.h"
 
 @implementation Partition
     
