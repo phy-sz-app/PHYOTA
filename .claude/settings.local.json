@@ -15,7 +15,18 @@
       "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,id=64945B5B-256D-43F6-A5A9-94B00F3809D9' clean)",
       "Bash(xcodebuild -project OTASDKDemo.xcodeproj -scheme OTASDKDemo -sdk iphonesimulator -configuration Debug -dry-run)",
       "Bash(clang -fsyntax-only -x objective-c -fobjc-arc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk -I. OTASDKDemo/OTASDKDemo/ViewController/BluetoothLogVC.m)",
-      "Bash(clang -fsyntax-only -x objective-c -fobjc-arc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk -I. -IOTASDK/OTASDK/Manager OTASDKDemo/OTASDKDemo/ViewController/BluetoothLogVC.m)"
+      "Bash(clang -fsyntax-only -x objective-c -fobjc-arc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk -I. -IOTASDK/OTASDK/Manager OTASDKDemo/OTASDKDemo/ViewController/BluetoothLogVC.m)",
+      "Bash(pod lib:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ruby:*)",
+      "Bash(gem list:*)",
+      "Bash(gem install:*)",
+      "Bash(pod trunk:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(git tag:*)",
+      "Bash(git show-ref:*)"
     ]
   }
 }
