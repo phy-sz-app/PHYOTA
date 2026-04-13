@@ -1,0 +1,44 @@
+//
+//  Header.h
+//  OTASDKDemo
+//
+//  Created by Yang on 2018/10/28.
+//  Copyright © 2018 phy. All rights reserved.
+//
+
+#ifndef Header_pch
+#define Header_pch
+
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+
+#define SCREEN_WIDTH                                  ([UIScreen mainScreen].bounds.size.width)
+#define SCREEN_HEIGHT                                 ([UIScreen mainScreen].bounds.size.height)
+
+//方正黑体简体字体定义
+#define FONT(F) [UIFont fontWithName:@"FZHTJW--GB1-0" size:F]
+
+//定义UIImage对象
+#define ImageNamed(fileName) [UIImage imageNamed:fileName]
+
+#define FontSystem(f)                               [UIFont systemFontOfSize:f]
+#define Font_Title                                  FontSystem(15.0f)
+
+
+#import <OTASDK/OTASDK.h>
+
+/**
+ *  配置自定义的测试Log
+ */
+#ifdef DEBUG
+    #define MLDLog(format, ...)  NSLog(format, ## __VA_ARGS__)
+#else
+    #define MLDLog(format, ...)
+#endif
+
+#endif
+
+#endif /* Header_h */

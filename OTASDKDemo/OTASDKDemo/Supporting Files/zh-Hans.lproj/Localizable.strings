@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  OTASDKDemo
+
+  Created by di lu on 2025/1/7.
+  Copyright © 2025 phy. All rights reserved.
+*/
+
+"Scan" = "搜索";
+
+"Stop" = "停止";
+
+"ScanStopped" = "蓝牙扫描已停止";
+
+"ScanStarted" = "蓝牙扫描已开始";
+
+
+"" = "";
+"" = "";
+"" = "";

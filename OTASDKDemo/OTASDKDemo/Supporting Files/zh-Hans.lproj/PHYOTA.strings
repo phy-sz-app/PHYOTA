@@ -1,0 +1,67 @@
+/* 
+  PHYOTA.strings
+  OTASDK
+
+  Created by di lu on 2025/1/8.
+  Copyright © 2025 phy. All rights reserved.
+*/
+
+"Please turn on your iPhone’s Bluetooth" = "请您打开手机的蓝牙功能";
+
+"The phone's Bluetooth is turned on" = "手机蓝牙已打开";
+
+"BLENoAuthorized" = "请您打开手机 【设置】 -> 应用【App】-> 【PHYOTA】 -> 【蓝牙】 -> 打开开关";
+
+"TheBluetoothClosed" = "手机蓝牙已关闭，无法升级";
+
+"StartConnect" = "开始连接";
+
+"BluetoothConnectionSuccessful" = "蓝牙连接成功,确定升级方式";
+
+"BluetoothDisconnected" = "蓝牙异常断开";
+
+"FailToConnectPeripheral" = "建立蓝牙连接失败";
+
+"Rescan" = "重新扫描处于升级模式的设备";
+
+"OTAServiceNotFound" = "没有OTA服务";
+
+"SLBServiceFound" = "正在确定SLB特性";
+
+"SBKServiceFound" = "正在确定SBK特性";
+
+"OTA Service Confuse" = "无法确定升级方式";
+
+"SLBCharacteristics" = "确定SLB升级模式";
+
+"File and device do not match" = "设备与升级文件类型不匹配";
+
+"SBKAppCharacteristics" = "确定SBK App模式";
+
+"SBKOTACharacteristics" = "确定SBK OTA模式";
+
+"EnableCharacteristicSuccessful" = "设备双向通信建立成功";
+
+"RebootToOTAModel" = "重启设备成功，进入升级模式";
+
+"SendOTAModeSwitch" = "让设备重启进入升级模式";
+
+"ConfirmFileData" = "发送完成，确认文件数据完整性";
+
+"MAXDisconnectedTime" = "无法稳定连接设备";
+
+"OTA End" = "升级结束";
+
+"OTA End All success" = "升级结束，全部设备升级成功";
+
+"Number of failures" = "失败数量";
+
+"Version number restriction" = "版本号限制，固件端拒绝OTA";
+
+"OTASuccessfully" = "此设备升级成功";
+
+"OTAFileCRCCheckFail" = "升级文件数据校验失败";
+
+"RebootDevice" = "给设备发生重启指令";
+
+"VersionCheckFail" = "版本号校验失败";

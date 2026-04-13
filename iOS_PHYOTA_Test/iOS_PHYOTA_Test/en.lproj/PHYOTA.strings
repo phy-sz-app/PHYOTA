@@ -1,0 +1,68 @@
+/* 
+  Localizable.strings
+  iOS_PHYOTA_Test
+
+  Created by di lu on 2026/2/27.
+  
+*/
+
+"Please turn on your iPhone’s Bluetooth" = "Please turn on your iPhone’s Bluetooth";
+
+"The phone's Bluetooth is turned on" = "The phone's Bluetooth is turned on";
+
+"BLENoAuthorized" = "Please go to your phone's 【Settings】 -> 【Applications】-> 【PHYOTA】 -> 【Bluetooth】 -> turn on the switch";
+
+"TheBluetoothClosed" = "The Bluetooth is closed, unable to OTA";
+
+"StartConnect" = "Start connect device";
+
+"BluetoothConnectionSuccessful" = "Bluetooth connection successful";
+
+"BluetoothDisconnected" = "Bluetooth disconnected";
+
+"FailToConnectPeripheral" = "Fail To Connect Peripheral";
+
+"Rescan" = "Rescan devices in upgrade mode";
+
+"OTAServiceNotFound" = "OTA Service Not Found";
+
+"SLBServiceFound" = "Determining the SLB upgrade method";
+
+"SBKServiceFound" = "Determining the SBK upgrade method";
+
+"OTA Service Confuse" = "Multiple upgrade services detected";
+
+"SLBCharacteristics" = "The SLB upgrade method has been determined";
+
+"File and device do not match" = "File and device do not match";
+
+"SBKAppCharacteristics" = "The SBK App upgrade method has been determined";
+
+"SBKOTACharacteristics" = "The SBK OTA upgrade method has been determined";
+
+"EnableCharacteristicSuccessful" = "The device is ready.";
+
+"RebootToOTAModel" = "The device reboots to enter upgrade mode";
+
+"SendOTAModeSwitch" = "Reboot the device to upgrade mode";
+
+"ConfirmFileData" = "Data sending completed, confirm file data";
+
+"MAXDisconnectedTime" = "Unable to stably connect to the device";
+
+"OTA End" = "Upgrade completed";
+
+"OTA End All success" = "OTA completed, all devices OTA successfully!";
+
+"Number of failures" = "Number of failures";
+
+"Version number restriction" = "Version number restriction, firmware rejects OTA";
+
+"OTASuccessfully" = "The device ota successfully";
+
+"OTAFileCRCCheckFail" = "Upgrade file data verification failed";
+
+"RebootDevice" = "Reboot the device";
+
+"VersionCheckFail" = "Version number verification failed";
+

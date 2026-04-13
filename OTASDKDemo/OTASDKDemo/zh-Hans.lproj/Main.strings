@@ -1,0 +1,66 @@
+
+/* Class = "UILabel"; text = "nameLabel"; ObjectID = "23P-kI-AAs"; */
+"23P-kI-AAs.text" = "nameLabel";
+
+/* Class = "UIButton"; normalTitle = "选择文件"; ObjectID = "367-5x-h0b"; */
+"367-5x-h0b.normalTitle" = "选择文件";
+
+/* Class = "UILabel"; text = "No upgrade file selected! Please click the button on the right!"; ObjectID = "3Uk-fj-4C8"; */
+"3Uk-fj-4C8.text" = "No upgrade file selected! Please click the button on the right!";
+
+/* Class = "UINavigationItem"; title = "OTA Upgrade"; ObjectID = "9zM-en-T92"; */
+"9zM-en-T92.title" = "OTA Upgrade";
+
+/* Class = "UIBarButtonItem"; title = "single mode"; ObjectID = "C4X-Xg-TAU"; */
+"C4X-Xg-TAU.title" = "single mode";
+
+/* Class = "UIButton"; configuration.title = "停止"; ObjectID = "Kqh-ni-2Hn"; */
+"Kqh-ni-2Hn.configuration.title" = "停止";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "Kqh-ni-2Hn"; */
+"Kqh-ni-2Hn.normalTitle" = "停止";
+
+/* Class = "UILabel"; text = "Please turn on your phone’s Bluetooth。"; ObjectID = "OzJ-nI-Pzs"; */
+"OzJ-nI-Pzs.text" = "Please turn on your phone’s Bluetooth。";
+
+/* Class = "UILabel"; text = "macLabel"; ObjectID = "SVb-HC-ZWx"; */
+"SVb-HC-ZWx.text" = "macLabel";
+
+/* Class = "UILabel"; text = "List of devices to upgrade, remaining："; ObjectID = "WDP-fo-zcv"; */
+"WDP-fo-zcv.text" = "List of devices to upgrade, remaining：";
+
+/* Class = "UILabel"; text = "statusLabel"; ObjectID = "Xml-X3-U8R"; */
+"Xml-X3-U8R.text" = "statusLabel";
+
+/* Class = "UINavigationItem"; title = "Select OTA File"; ObjectID = "Y5n-tQ-F58"; */
+"Y5n-tQ-F58.title" = "选择升级文件";
+
+/* Class = "UILabel"; text = "如果项目中已经连接蓝牙设备，在不断开BLE连接的情况下进行OTA?  "; ObjectID = "abV-vO-fJF"; */
+"abV-vO-fJF.text" = "如果项目中已经连接蓝牙设备，在不断开BLE连接的情况下进行OTA?  ";
+
+/* Class = "UIBarButtonItem"; title = "搜索"; ObjectID = "kHO-7P-6sS"; */
+"kHO-7P-6sS.title" = "搜索";
+
+/* Class = "UIButton"; normalTitle = "开始升级"; ObjectID = "ozc-oQ-Obd"; */
+"ozc-oQ-Obd.normalTitle" = "开始升级";
+
+/* Class = "UIButton"; configuration.title = "连接设备"; ObjectID = "pcl-Qx-Se7"; */
+"pcl-Qx-Se7.configuration.title" = "连接设备";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "pcl-Qx-Se7"; */
+"pcl-Qx-Se7.normalTitle" = "Button4";
+
+/* Class = "UIBarButtonItem"; title = "返回"; ObjectID = "srg-GK-EMQ"; */
+"srg-GK-EMQ.title" = "返回";
+
+/* Class = "UIBarButtonItem"; title = "设置"; ObjectID = "urg-RJ-KkE"; */
+"urg-RJ-KkE.title" = "设置";
+
+/* Class = "UIButton"; normalTitle = "Select File"; ObjectID = "xJ2-6W-E6X"; */
+"xJ2-6W-E6X.normalTitle" = "选择升级文件";
+
+/* Class = "UINavigationItem"; title = "OTA Demo"; ObjectID = "xj6-Ul-QUx"; */
+"xj6-Ul-QUx.title" = "OTA Demo";
+
+/* Class = "UIBarButtonItem"; title = "确定"; ObjectID = "ymd-5d-f9V"; */
+"ymd-5d-f9V.title" = "确定";

@@ -1,0 +1,22 @@
+/* 
+  Localizable.strings
+  OTASDKDemo
+
+  Created by di lu on 2025/1/7.
+  Copyright © 2025 phy. All rights reserved.
+*/
+
+"scan" = "scan";
+
+"Stop" = "Stop";
+
+"ScanStopped" = "Bluetooth scanning stopped";
+
+"ScanStarted" = "Bluetooth scan started";
+
+
+"" = "";
+"" = "";
+"" = "";
+"" = "";
+"" = "";

@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcodebuild -list -workspace iOSPHYOTATest.xcworkspace)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme \"iOS_PHYOTA_Test\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme \"iOS_PHYOTA_Test\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme \"iOS_PHYOTA_Test\" -sdk iphonesimulator -destination 'platform=iOS Simulator' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme \"iOS_PHYOTA_Test\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,name=iPhone 15' clean)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,name=iPhone 15' build -quiet)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,name=iPhone 16e' build -quiet)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,name=iPhone 15' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,name=iPhone 16' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,id=64945B5B-256D-43F6-A5A9-94B00F3809D9' build)",
+      "Bash(xcodebuild -workspace iOSPHYOTATest.xcworkspace -scheme iOS_PHYOTA_Test -destination 'platform=iOS Simulator,id=64945B5B-256D-43F6-A5A9-94B00F3809D9' clean)",
+      "Bash(xcodebuild -project OTASDKDemo.xcodeproj -scheme OTASDKDemo -sdk iphonesimulator -configuration Debug -dry-run)",
+      "Bash(clang -fsyntax-only -x objective-c -fobjc-arc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk -I. OTASDKDemo/OTASDKDemo/ViewController/BluetoothLogVC.m)",
+      "Bash(clang -fsyntax-only -x objective-c -fobjc-arc -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk -I. -IOTASDK/OTASDK/Manager OTASDKDemo/OTASDKDemo/ViewController/BluetoothLogVC.m)"
+    ]
+  }
+}
