@@ -26,7 +26,16 @@
       "Bash(git remote:*)",
       "Bash(git push:*)",
       "Bash(git tag:*)",
-      "Bash(git show-ref:*)"
+      "Bash(git show-ref:*)",
+      "Bash(pod cache *)",
+      "Bash(rm -rf ~/Library/Caches/CocoaPods)",
+      "Bash(pod search *)",
+      "Bash(pod repo *)",
+      "Bash(curl -sI \"https://cdn.jsdelivr.net/cocoapods-specs/Specs/P/H/Y/PHYOTA/1.0.1/PHYOTA.podspec.json\")",
+      "Bash(curl -s \"https://trunk.cocoapods.org/api/v1/pods/PHYOTA\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"https://cdn.jsdelivr.net/cocoapods-specs/all_pods.txt\")",
+      "WebFetch(domain:cocoapods.org)"
     ]
   }
 }
