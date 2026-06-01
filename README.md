@@ -1,8 +1,8 @@
-# OTASDK
+# PHYOTA
 
-[![CocoaPods](https://img.shields.io/cocoapods/v/OTASDK.svg)](https://cocoapods.org/pods/OTASDK)
-[![CocoaPods](https://img.shields.io/cocoapods/p/OTASDK.svg)](https://cocoapods.org/pods/OTASDK)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/phy-sz-app/OTASDK/blob/master/LICENSE)
+[![CocoaPods](https://img.shields.io/cocoapods/v/PHYOTA.svg)](https://cocoapods.org/pods/PHYOTA)
+[![CocoaPods](https://img.shields.io/cocoapods/p/PHYOTA.svg)](https://cocoapods.org/pods/PHYOTA)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/phy-sz-app/PHYOTA/blob/master/LICENSE)
 
 A Bluetooth Low Energy (BLE) Over-The-Air (OTA) firmware update SDK for PHY devices.
 
@@ -16,10 +16,10 @@ A Bluetooth Low Energy (BLE) Over-The-Air (OTA) firmware update SDK for PHY devi
 
 ### CocoaPods
 
-OTASDK is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
+PHYOTA is available through [CocoaPods](https://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'OTASDK', '~> 1.0.0'
+pod 'PHYOTA', '~> 1.0.1'
 ```
 
 Then run:
@@ -40,18 +40,18 @@ pod install
 
 **Objective-C:**
 ```objective-c
-#import <OTASDK/OTASDK.h>
+#import <PHYOTA/PHYOTA.h>
 ```
 
 **Swift:**
 ```swift
-import OTASDK
+import PHYOTA
 ```
 
 ### Basic Example
 
 ```objective-c
-#import <OTASDK/OTASDK.h>
+#import <PHYOTA/PHYOTA.h>
 
 // Initialize BLE manager
 PHYBLEManager *bleManager = [[PHYBLEManager alloc] init];
@@ -82,20 +82,21 @@ Type definitions for OTA operations.
 
 ## Version Management
 
-OTASDK follows [Semantic Versioning](https://semver.org/).
+PHYOTA follows [Semantic Versioning](https://semver.org/).
 
 - **MAJOR** version when you make incompatible API changes
 - **MINOR** version when you add functionality in a backward compatible manner
 - **PATCH** version when you make backward compatible bug fixes
 
-### Current Version: 1.0.0
+### Current Version: 1.0.1
 
 #### Version History
-- **1.0.0** (2026-04-13): Initial release to CocoaPods
+- **1.0.1** (2026-06-01): Renamed to PHYOTA
+- **1.0.0** (2026-04-13): Initial release to CocoaPods (as OTASDK)
 
 ## License
 
-OTASDK is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
+PHYOTA is available under the MIT license. See the [LICENSE](LICENSE) file for more info.
 
 ## Author
 
@@ -111,4 +112,4 @@ chenshuangchao, 915893620@qq.com
 
 ## Support
 
-For issues and feature requests, please use the [GitHub Issues](https://github.com/phy-sz-app/OTASDK/issues) page.
+For issues and feature requests, please use the [GitHub Issues](https://github.com/phy-sz-app/PHYOTA/issues) page.
