@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import<OTASDK/JCDataConvert.h>
-#import<OTASDK/PHYBLEManager.h>
-#import<OTASDK/PHYBLEModel.h>
-#import<OTASDK/PHYOTAType.h>
+#import<PHYOTA/JCDataConvert.h>
+#import<PHYOTA/PHYBLEManager.h>
+#import<PHYOTA/PHYBLEModel.h>
+#import<PHYOTA/PHYOTAType.h>
