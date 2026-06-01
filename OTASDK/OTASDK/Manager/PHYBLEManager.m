@@ -145,6 +145,10 @@ PHYOTASBKProtocolDelegate>
                     dispatch_source_cancel(model.myTimer);
                     model.myTimer = nil;
                 }
+                if (model.disconnectTimer) {
+                    dispatch_source_cancel(model.disconnectTimer);
+                    model.disconnectTimer = nil;
+                }
             }
             [self.deviceArray removeAllObjects];
         }
@@ -246,6 +250,7 @@ PHYOTASBKProtocolDelegate>
                     m.peripheral = model.peripheral;
                     m.OTAType = None;
                     m.adverMacAddr = model.adverMacAddr;
+                    m.realName = model.realName ?: m.realName;
                 }
                 if (m.OTAType == SBKAppModeOver) {
                     needRescan = YES;
@@ -298,6 +303,12 @@ PHYOTASBKProtocolDelegate>
     [self.connManager connectionManagerDidDisconnect:peripheral error:error];
     PHYBLEModel *model = [self findModelByPeripheral:peripheral];
     [self.dataSender clearQueueForUUID:peripheral.identifier.UUIDString];
+
+    // 取消模式切换断连计时器（设备已断开，无需强制断连）
+    if (model.disconnectTimer) {
+        dispatch_source_cancel(model.disconnectTimer);
+        model.disconnectTimer = nil;
+    }
 
     dispatch_async(self.bleQueue, ^{
         @synchronized (self) {
@@ -549,6 +560,47 @@ PHYOTASBKProtocolDelegate>
 
 - (void)dataSend:(CBPeripheral *)peripheral updateState:(NSInteger)state message:(NSString *)msg {
     [self updateDevice:peripheral type:state message:msg];
+    
+    if (state == SBKAppModeOver) {
+        [self startModeSwitchDisconnectTimer:peripheral];
+    }
+}
+
+/// 发送0102/0103后启动2秒断连计时器：若设备未自动断开，则强制断开
+- (void)startModeSwitchDisconnectTimer:(CBPeripheral *)peripheral {
+    PHYBLEModel *model = [self findModelByPeripheral:peripheral];
+    if (!model) return;
+
+    if (model.disconnectTimer) {
+        dispatch_source_cancel(model.disconnectTimer);
+        model.disconnectTimer = nil;
+    }
+
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.bleQueue);
+    dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
+
+    __weak typeof(self) weakSelf = self;
+    __weak typeof(CBPeripheral *) weakPeripheral = peripheral;
+    dispatch_source_set_event_handler(timer, ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+
+        CBPeripheral *p = weakPeripheral;
+        if (p.state == CBPeripheralStateConnected) {
+            NSLog(@"模式切换超时(2s)，强制断开蓝牙连接");
+            [strongSelf.connManager cancelConnection:p central:strongSelf.myCentralManager];
+        }
+
+        PHYBLEModel *m = [strongSelf findModelByPeripheral:p];
+        if (m.disconnectTimer) {
+            dispatch_source_cancel(m.disconnectTimer);
+            m.disconnectTimer = nil;
+        }
+    });
+
+    model.disconnectTimer = timer;
+    dispatch_resume(timer);
+
 }
 
 @end

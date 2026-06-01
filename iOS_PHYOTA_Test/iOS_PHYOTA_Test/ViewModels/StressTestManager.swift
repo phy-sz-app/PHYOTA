@@ -303,11 +303,9 @@ class StressTestManager: ObservableObject {
         singleTest!.isSuccess = isSuccess
         self.currentTestStatus = "测试设备 重启中..."
         // 启动扫描
-        if bluetoothManager!.otaDevices.isEmpty {
-            isOTAEndScanDevice = true
-            print("KT endSingleOTATest 开始扫描")
-            bluetoothManager!.startScan()
-        }
+        isOTAEndScanDevice = true
+        print("endSingleOTATest 开始扫描")
+        bluetoothManager!.startScan()
     }
     
     func deviceFound(_ devicesArray: [PHYBLEModel]) {

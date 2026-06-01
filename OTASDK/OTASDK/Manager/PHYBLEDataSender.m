@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendData:(NSData *)data peripheral:(CBPeripheral *)peripheral charUUID:(NSString *)charUUID noResponse:(BOOL)noResponse {
-    NSLog(@"发送指令：%@",data);
+    NSLog(@"发送指令：%@",[JCDataConvert convertDataToHexStr:data]);
     NSString *uuid = peripheral.identifier.UUIDString;
     if (!noResponse) {
         @synchronized (self) {

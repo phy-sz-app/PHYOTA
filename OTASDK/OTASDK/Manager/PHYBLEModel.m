@@ -16,6 +16,10 @@
         dispatch_source_cancel(_myTimer);
         _myTimer = nil;
     }
+    if (_disconnectTimer) {
+        dispatch_source_cancel(_disconnectTimer);
+        _disconnectTimer = nil;
+    }
 }
 
 @end

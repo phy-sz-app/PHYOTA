@@ -54,6 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, nullable) dispatch_source_t   myTimer;
 
+/// 模式切换断连计时器：发送0102/0103后，等待2秒未断开则强制断开
+@property (nonatomic, strong, nullable) dispatch_source_t   disconnectTimer;
+
 @end
 
 

@@ -45,6 +45,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)SBKAPPReceiveData:(NSData *)data model:(PHYBLEModel *)model {
     
+    NSString *dataStr = [JCDataConvert ConvertHexToString:data];
+    // V315新版为18字节,V315之前旧版为14字节
+    // 00 DD55552262A2 2262 56332E312E3500 00 00 -> A262225555DD
+    // 00 DD55552262A2      56332E312E3500
+
     if (data.length == 18) {
         NSString *macString = [JCDataConvert getCommandMac:data];
         // 00 DD55552262A2 2262 56332E312E3500 00 00 -> A262225555DD
@@ -80,10 +85,21 @@ NS_ASSUME_NONNULL_BEGIN
         }
         
         [self sendDeviceModeChange:model];
-    }else {
-        // 当做315以前的版本处理
-        NSLog(@"App模式下收到数据：%@",data);
+    }else if(data.length == 14) {
+        NSLog(@"%@ MAC Address: %@", model.peripheral.name, dataStr);
+        NSString *macString = [JCDataConvert getCommandMac:data];
+        NSData *subData = [data subdataWithRange:NSMakeRange(7, 7)];
+        NSString *versionID = [[NSString alloc] initWithData:subData encoding:NSASCIIStringEncoding];
+        [self.delegate sbkOTA:model.peripheral updateState:DeviceVersion message:[NSString stringWithFormat:@"%@%@",@"0000",versionID]];
+        @synchronized (self) {
+            model.adverMacAddr = macString;
+        }
         [self sendDeviceModeChange:model];
+    }else if([dataStr isEqualToString:@"00"]){
+        NSLog(@"00 代表允许升级，开始模式切换");
+        [self sendDeviceModeChange:model];
+    }else {
+        NSLog(@"App模式数据未能被正确解析：%@",dataStr);
     }
 }
 

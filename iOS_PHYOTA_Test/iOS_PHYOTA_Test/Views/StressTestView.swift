@@ -266,8 +266,9 @@ struct TestControlsView: View {
                 )
             }
             .padding(.horizontal)
-            .disabled(bluetoothManager.selectedDevicesCount == 0 || fileManager.selectedFiles.isEmpty )
-            .opacity((bluetoothManager.selectedDevicesCount == 0 || fileManager.selectedFiles.isEmpty ) ? 0.5 : 1)
+            .disabled((bluetoothManager.selectedDevicesCount == 0 || fileManager.selectedFiles.isEmpty) && !bluetoothManager.isTestMode )
+            .opacity(((bluetoothManager.selectedDevicesCount == 0 || fileManager.selectedFiles.isEmpty) && !bluetoothManager.isTestMode ) ? 0.5 : 1)
+
         }
         .padding(.vertical)
         .alert("开始压力测试", isPresented: $showingStartAlert) {
