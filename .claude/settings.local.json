@@ -35,7 +35,8 @@
       "Bash(curl -s \"https://trunk.cocoapods.org/api/v1/pods/PHYOTA\")",
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://cdn.jsdelivr.net/cocoapods-specs/all_pods.txt\")",
-      "WebFetch(domain:cocoapods.org)"
+      "WebFetch(domain:cocoapods.org)",
+      "Bash(xcodebuild *)"
     ]
   }
 }

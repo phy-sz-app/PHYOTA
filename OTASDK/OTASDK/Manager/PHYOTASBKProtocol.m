@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
         NSLog(@"App模式此刻初始化是个意外");
     }
     [self.dataSender sendHex:@"02" peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+    [self.delegate sbkOTA:model.peripheral updateState:model.OTAType message:@"获取MAC地址!"];
 }
 
 - (void)startOTAWithModel:(PHYBLEModel *)model {
@@ -59,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
         productID = [JCDataConvert strAdd0:productID length:2 overturn:NO];
         NSData *subData = [data subdataWithRange:NSMakeRange(9, 7)];
         NSString *versionID = [[NSString alloc] initWithData:subData encoding:NSASCIIStringEncoding];
-        [self.delegate sbkOTA:model.peripheral updateState:DeviceVersion message:[NSString stringWithFormat:@"%@%@",productID,versionID]];
+        [self.delegate sbkOTA:model.peripheral updateState:DeviceVersion message:[NSString stringWithFormat:@"%@,%@%@",macString,productID,versionID]];
         
         // booter315及以后的版本，升级文件中必须包含PID和VID，否则芯片端会主动断开
         if (_fileDetail.productID.length>0 && _fileDetail.booterVerson.length>0) {
@@ -86,11 +87,19 @@ NS_ASSUME_NONNULL_BEGIN
         
         [self sendDeviceModeChange:model];
     }else if(data.length == 14) {
-        NSLog(@"%@ MAC Address: %@", model.peripheral.name, dataStr);
         NSString *macString = [JCDataConvert getCommandMac:data];
+        NSLog(@"%@ MAC Address: %@", model.peripheral.name, macString);
         NSData *subData = [data subdataWithRange:NSMakeRange(7, 7)];
         NSString *versionID = [[NSString alloc] initWithData:subData encoding:NSASCIIStringEncoding];
-        [self.delegate sbkOTA:model.peripheral updateState:DeviceVersion message:[NSString stringWithFormat:@"%@%@",@"0000",versionID]];
+        [self.delegate sbkOTA:model.peripheral updateState:DeviceVersion message:[NSString stringWithFormat:@"%@,%@%@",macString,@"0000",versionID]];
+        @synchronized (self) {
+            model.adverMacAddr = macString;
+        }
+        [self sendDeviceModeChange:model];
+    }else if(data.length >= 7) {
+        NSString *macString = [JCDataConvert getCommandMac:data];
+        NSLog(@"%@ MAC Address: %@", model.peripheral.name, macString);
+        [self.delegate sbkOTA:model.peripheral updateState:DeviceVersion message:[NSString stringWithFormat:@"%@,%@",macString,@"000000000000000000"]];
         @synchronized (self) {
             model.adverMacAddr = macString;
         }
@@ -100,6 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
         [self sendDeviceModeChange:model];
     }else {
         NSLog(@"App模式数据未能被正确解析：%@",dataStr);
+        [self.delegate sbkOTA:model.peripheral updateState:OTAFailed message:@"App模式数据未能被正确解析"];
     }
 }
 
@@ -236,6 +246,8 @@ NS_ASSUME_NONNULL_BEGIN
         [self SBKStepOne:model];
     } else if ([cmdStr isEqualToString:@"00"] || [cmdStr isEqualToString:@"0091"] || [cmdStr isEqualToString:@"FF"]) {
         [self startOTAWithModel:model];
+    } else if([cmdStr isEqualToString:@"05FF"]) {
+        [self.delegate sbkOTA:model.peripheral updateState:OTAFailed message:@"固件端不支持此次升级:0x05FF！"];
     } else {
         NSString *msg = [NSString stringWithFormat:@"收到固件端错误码:%@",cmdStr];
         [self.delegate sbkOTA:model.peripheral updateState:DeviceErrorCode message:msg];
