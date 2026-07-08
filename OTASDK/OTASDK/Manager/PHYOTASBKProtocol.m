@@ -9,6 +9,7 @@
 #import "PHYOTASBKProtocol.h"
 #import "JCDataConvert.h"
 #import "Partition.h"
+#import "PHYOTASDKLogger.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
     }
     [self.dataSender sendHex:@"02" peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
     [self.delegate sbkOTA:model.peripheral updateState:model.OTAType message:@"获取MAC地址!"];
+    [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                    message:@"SBK App模式-获取MAC地址(0x02)"
+                                    hexData:@"02"
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
 }
 
 - (void)startOTAWithModel:(PHYBLEModel *)model {
@@ -38,22 +44,34 @@ NS_ASSUME_NONNULL_BEGIN
         model.mSBKContext.isFamewareCheck = YES;
         NSString *versionInfoCMD = [NSString stringWithFormat:@"21%@%@",[JCDataConvert strAdd0:_fileDetail.productID length:2 overturn:NO],_fileDetail.booterVerson];
         [self.dataSender sendHex:versionInfoCMD peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+        [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                        message:@"SBK固件版本校验(0x21)"
+                                        hexData:versionInfoCMD
+                                     deviceName:model.peripheral.name
+                                     deviceUUID:model.peripheral.identifier.UUIDString];
         return;
     }
     NSString *commandStr = [NSString stringWithFormat:@"01%@00",[JCDataConvert ToHex:(int)_fileDetail.fileResult.count]];
     [self.dataSender sendHex:commandStr peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+    [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                    message:@"SBK发送分区数量(0x01)"
+                                    hexData:commandStr
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
 }
 
 - (void)SBKAPPReceiveData:(NSData *)data model:(PHYBLEModel *)model {
-    
     NSString *dataStr = [JCDataConvert ConvertHexToString:data];
+    [[PHYOTASDKLogger sharedLogger] logRecv:@"SBKProtocol"
+                                    message:[NSString stringWithFormat:@"SBK App模式收到数据: %@", dataStr]
+                                    hexData:dataStr
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
     // V315新版为18字节,V315之前旧版为14字节
     // 00 DD55552262A2 2262 56332E312E3500 00 00 -> A262225555DD
     // 00 DD55552262A2      56332E312E3500
-
     if (data.length == 18) {
         NSString *macString = [JCDataConvert getCommandMac:data];
-        // 00 DD55552262A2 2262 56332E312E3500 00 00 -> A262225555DD
         NSLog(@"%@ MAC Address: %@", model.peripheral.name, macString);
         
         NSString *productID = [JCDataConvert convertDataToHexStr:[data subdataWithRange:NSMakeRange(7, 2)]];
@@ -95,7 +113,11 @@ NS_ASSUME_NONNULL_BEGIN
         @synchronized (self) {
             model.adverMacAddr = macString;
         }
-        [self sendDeviceModeChange:model];
+        dispatch_async(self.callbackQueue, ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendDeviceModeChange:model];
+            });
+        });
     }else if(data.length >= 7) {
         NSString *macString = [JCDataConvert getCommandMac:data];
         NSLog(@"%@ MAC Address: %@", model.peripheral.name, macString);
@@ -103,7 +125,11 @@ NS_ASSUME_NONNULL_BEGIN
         @synchronized (self) {
             model.adverMacAddr = macString;
         }
-        [self sendDeviceModeChange:model];
+        dispatch_async(self.callbackQueue, ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self sendDeviceModeChange:model];
+            });
+        });
     }else if([dataStr isEqualToString:@"00"]){
         NSLog(@"00 代表允许升级，开始模式切换");
         [self sendDeviceModeChange:model];
@@ -116,8 +142,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendDeviceModeChange:(PHYBLEModel *)model {
     if ([_fileDetail.filePath hasSuffix:@"res"]) {
         [self.dataSender sendHex:@"0103" peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+        model.OTAType = SBKAppModeOver;
+        [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                        message:@"SBK切换到RES模式(0x0103)"
+                                        hexData:@"0103"
+                                     deviceName:model.peripheral.name
+                                     deviceUUID:model.peripheral.identifier.UUIDString];
     }else if ([_fileDetail.filePath hasSuffix:@"hex"] || [_fileDetail.filePath hasSuffix:@"hex4"] || [_fileDetail.filePath hasSuffix:@"hex16"]) {
         [self.dataSender sendHex:@"0102" peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+        model.OTAType = SBKAppModeOver;
+        [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                        message:@"SBK切换到OTA模式(0x0102)"
+                                        hexData:@"0102"
+                                     deviceName:model.peripheral.name
+                                     deviceUUID:model.peripheral.identifier.UUIDString];
     }
 }
 
@@ -138,7 +176,11 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSString *cmd = [self make_part_cmd:(int)model.mSBKContext.partitionIndex flash_addr:(int)temp_flash_addr run_addr:partition.address size:(int)partition.partitionLength checksum:partition.checkSum];
     [self.dataSender sendHex:cmd peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
-    
+    [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                    message:[NSString stringWithFormat:@"SBK发送分区信息(0x02) 分区:%lu", (unsigned long)model.mSBKContext.partitionIndex]
+                                    hexData:cmd
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
 }
 
 ///收到0x0084收到0x0087
@@ -211,6 +253,11 @@ NS_ASSUME_NONNULL_BEGIN
         }
         NSString *cmd = [self make_part_cmd:(int)partitionIndex flash_addr:(int)temp_flash_addr run_addr:partition.address size:(int)partition.partitionLength checksum:partition.checkSum];
         [self.dataSender sendHex:cmd peripheral:deviceModel.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+        [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                        message:[NSString stringWithFormat:@"SBK下一个分区信息(0x02) 分区:%lu", (unsigned long)partitionIndex]
+                                        hexData:cmd
+                                     deviceName:deviceModel.peripheral.name
+                                     deviceUUID:deviceModel.peripheral.identifier.UUIDString];
     }
 }
 
@@ -222,10 +269,20 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     NSString *cmdStr = [JCDataConvert ConvertHexToString:data].uppercaseString;
+    [[PHYOTASDKLogger sharedLogger] logRecv:@"SBKProtocol"
+                                    message:[NSString stringWithFormat:@"SBK收到指令: %@", cmdStr]
+                                    hexData:cmdStr
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
     if ([cmdStr isEqualToString:@"0081"]) {
         if ([_fileDetail.filePath hasSuffix:@"res"]) {
             NSString *cmdStr = [self make_resource_cmd];
             [self.dataSender sendHex:cmdStr peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+            [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                            message:@"RES资源分区信息(0x05)"
+                                            hexData:cmdStr
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
         }else {
             [self SBKStepOne:model];
         }
@@ -242,6 +299,11 @@ NS_ASSUME_NONNULL_BEGIN
         NSString *msg = NSLocalizedStringFromTable(@"RebootDevice", @"PHYOTA", @"收到0x83,发送Reboot指令!");
         [self.delegate sbkOTA:model.peripheral updateState:OTAComplete message:msg];
         [self.dataSender sendHex:@"04" peripheral:model.peripheral charUUID:SBK_OTA_WRITE_Characteristic];
+        [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                        message:@"OTA完成-发送重启指令(0x04)"
+                                        hexData:@"04"
+                                     deviceName:model.peripheral.name
+                                     deviceUUID:model.peripheral.identifier.UUIDString];
     } else if ([cmdStr isEqualToString:@"0089"]) {
         [self SBKStepOne:model];
     } else if ([cmdStr isEqualToString:@"00"] || [cmdStr isEqualToString:@"0091"] || [cmdStr isEqualToString:@"FF"]) {
@@ -342,6 +404,15 @@ NS_ASSUME_NONNULL_BEGIN
         // 当一组数据发送完成（刚发送完第15包）或者当前分区数据发送完成时暂停
         BOOL isGroupComplete = (packetInGroup == 15 && newPacketInGroup == 0);
         BOOL isPartitionComplete = (blockIndex >= partition.partitionLength * 2);
+        if ((packetInGroup == 0 && blockIndex > 0) || isPartitionComplete) {
+            [[PHYOTASDKLogger sharedLogger] logSend:@"SBKProtocol"
+                                            message:[NSString stringWithFormat:@"SBK发送固件数据 分区:%lu 偏移:%lu %@",
+                                                     (unsigned long)partitionIndex, (unsigned long)blockIndex,
+                                                     isPartitionComplete ? @"(分区完成)" : @""]
+                                            hexData:nil
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
+        }
         
         if (isGroupComplete || isPartitionComplete) {
             // 一组数据传输完或当前分区数据发送完，暂停定时器

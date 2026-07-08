@@ -11,8 +11,9 @@
 #import "PopupMenuView.h"
 #import "SelectFileVC.h"
 #import "BluetoothLogVC.h"
+#import <OTASDK/PHYOTASDKLogger.h>
 
-@interface SelectDeviceVC ()<UITableViewDelegate, UITableViewDataSource, PHYBLEManagerDelegate, PopupMenuViewDelegate, SelectFileDelegate>
+@interface SelectDeviceVC ()<UITableViewDelegate, UITableViewDataSource, PHYBLEManagerDelegate, PopupMenuViewDelegate, SelectFileDelegate, PHYOTASDKLoggerDelegate>
 
 @property (nonatomic, weak) PHYBLEManager            *bluetoothManager;
 
@@ -51,6 +52,7 @@
     //蓝牙初始化
     self.bluetoothManager = [PHYBLEManager shareInstance];
     self.bluetoothManager.delegate = self;
+    [PHYOTASDKLogger sharedLogger].delegate = self;
     self.showArray = [NSMutableArray array];
     self.selectArray = [NSMutableArray array];
     self.bluetoothLogArray = [NSMutableArray array];
@@ -249,6 +251,29 @@
     [self.navigationController pushViewController:logVC animated:YES];
 }
 
+
+#pragma mark - PHYOTASDKLoggerDelegate
+- (void)otaSDKLoggerDidAddEntry:(PHYOTASDKLogEntry *)entry {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"HH:mm:ss.SSS";
+    NSString *timeStr = [formatter stringFromDate:entry.timestamp];
+    NSString *logMessage = [NSString stringWithFormat:@"[%@] [%@] [%@] %@",
+                            timeStr, entry.direction, entry.source, entry.message];
+    if (entry.hexData) {
+        logMessage = [logMessage stringByAppendingFormat:@" | %@", entry.hexData];
+    }
+    NSString *device = entry.deviceName ?: (entry.deviceUUID ?: @"");
+    NSDictionary *logEntry = @{
+        @"timestamp": entry.timestamp,
+        @"message": logMessage,
+        @"code": @(entry.level),
+        @"device": device,
+        @"type": entry.direction
+    };
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.bluetoothLogArray addObject:logEntry];
+    });
+}
 
 #pragma mark - SDK回调相关代理方法
 

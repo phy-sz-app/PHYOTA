@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import <OTASDK/PHYOTASDKLogger.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

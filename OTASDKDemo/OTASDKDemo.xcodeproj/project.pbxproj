@@ -12,7 +12,7 @@
 		24748AE72D2E495A006D6C73 /* PHYOTA.strings in Resources */ = {isa = PBXBuildFile; fileRef = 24748AE62D2E495A006D6C73 /* PHYOTA.strings */; };
 		247DB3C228979E740045857A /* DemoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 247DB3C128979E740045857A /* DemoVC.m */; };
 		24C61BD02F84ABE100267866 /* BluetoothLogVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 24C61BCF2F84ABE100267866 /* BluetoothLogVC.m */; };
-		24ECD16528E19A6200CF7455 /* OTASDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A5C11C286C3503008DA931 /* OTASDK.framework */; };
+		24D739DD2FFE09A200D09378 /* OTASDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A5C11C286C3503008DA931 /* OTASDK.framework */; };
 		24FD79882D2CD58E00F27619 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 24FD79862D2CD58E00F27619 /* Localizable.strings */; };
 		24FF703C2C5CC0DD00B054D7 /* PopupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 24FF703B2C5CC0DD00B054D7 /* PopupViewCell.m */; };
 		2FE4A58C2185E34F004CECE5 /* SelectDeviceVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FE4A58A2185E34F004CECE5 /* SelectDeviceVC.m */; };
@@ -76,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24ECD16528E19A6200CF7455 /* OTASDK.framework in Frameworks */,
+				24D739DD2FFE09A200D09378 /* OTASDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

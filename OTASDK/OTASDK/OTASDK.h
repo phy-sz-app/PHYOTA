@@ -12,3 +12,5 @@
 #import <OTASDK/PHYBLEManager.h>
 #import <OTASDK/PHYBLEModel.h>
 #import <OTASDK/PHYOTAType.h>
+#import <OTASDK/PHYOTASDKLogger.h>
+

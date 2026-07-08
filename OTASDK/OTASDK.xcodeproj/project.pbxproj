@@ -27,6 +27,8 @@
 		24D652B42F7D05E200680D60 /* PHYOTASLBProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 24D652B12F7D05E200680D60 /* PHYOTASLBProtocol.h */; };
 		24D652B72F7D062300680D60 /* PHYOTASBKProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D652B62F7D062300680D60 /* PHYOTASBKProtocol.m */; };
 		24D652B82F7D062300680D60 /* PHYOTASBKProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 24D652B52F7D062300680D60 /* PHYOTASBKProtocol.h */; };
+		24D739D82FFDFCEF00D09378 /* PHYOTASDKLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 24D739D62FFDFCEF00D09378 /* PHYOTASDKLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		24D739D92FFDFCEF00D09378 /* PHYOTASDKLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D739D72FFDFCEF00D09378 /* PHYOTASDKLogger.m */; };
 		B729904021AA742C0000323E /* JCDataConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = B729902F21AA742B0000323E /* JCDataConvert.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B729904221AA742C0000323E /* JCDataConvert.m in Sources */ = {isa = PBXBuildFile; fileRef = B729903121AA742B0000323E /* JCDataConvert.m */; };
 		B746AAF02181CF8A00CC0C42 /* OTASDK.h in Headers */ = {isa = PBXBuildFile; fileRef = B746AAE22181CF8900CC0C42 /* OTASDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -54,6 +56,8 @@
 		24D652B22F7D05E200680D60 /* PHYOTASLBProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PHYOTASLBProtocol.m; sourceTree = "<group>"; };
 		24D652B52F7D062300680D60 /* PHYOTASBKProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PHYOTASBKProtocol.h; sourceTree = "<group>"; };
 		24D652B62F7D062300680D60 /* PHYOTASBKProtocol.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PHYOTASBKProtocol.m; sourceTree = "<group>"; };
+		24D739D62FFDFCEF00D09378 /* PHYOTASDKLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PHYOTASDKLogger.h; sourceTree = "<group>"; };
+		24D739D72FFDFCEF00D09378 /* PHYOTASDKLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PHYOTASDKLogger.m; sourceTree = "<group>"; };
 		2FE4A57A21855DB0004CECE5 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		B729902F21AA742B0000323E /* JCDataConvert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JCDataConvert.h; sourceTree = "<group>"; };
 		B729903121AA742B0000323E /* JCDataConvert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JCDataConvert.m; sourceTree = "<group>"; };
@@ -132,6 +136,8 @@
 				2409E5AB2CCB883800C71447 /* Partition.m */,
 				B729902F21AA742B0000323E /* JCDataConvert.h */,
 				B729903121AA742B0000323E /* JCDataConvert.m */,
+				24D739D62FFDFCEF00D09378 /* PHYOTASDKLogger.h */,
+				24D739D72FFDFCEF00D09378 /* PHYOTASDKLogger.m */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -148,6 +154,7 @@
 				2409E5B02CCB885F00C71447 /* Partition.h in Headers */,
 				24D652AB2F7D051000680D60 /* PHYBLEConnectionManager.h in Headers */,
 				0482FB292852DA9900C65664 /* PHYBLEModel.h in Headers */,
+				24D739D82FFDFCEF00D09378 /* PHYOTASDKLogger.h in Headers */,
 				048AC77C285634ED00819C2A /* PHYFileHandle.h in Headers */,
 				24D652B42F7D05E200680D60 /* PHYOTASLBProtocol.h in Headers */,
 				B729904021AA742C0000323E /* JCDataConvert.h in Headers */,
@@ -186,7 +193,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2640;
+				LastUpgradeCheck = 2660;
 				ORGANIZATIONNAME = phy;
 				TargetAttributes = {
 					B746AADE2181CF8900CC0C42 = {
@@ -236,6 +243,7 @@
 				24D652B72F7D062300680D60 /* PHYOTASBKProtocol.m in Sources */,
 				048AC77D285634ED00819C2A /* PHYFileHandle.m in Sources */,
 				24D652B02F7D057900680D60 /* PHYBLEDataSender.m in Sources */,
+				24D739D92FFDFCEF00D09378 /* PHYOTASDKLogger.m in Sources */,
 				2409E5AC2CCB883800C71447 /* Partition.m in Sources */,
 				24D652AC2F7D051000680D60 /* PHYBLEConnectionManager.m in Sources */,
 				04E6E3482851DEB000701447 /* PHYBLEManager.m in Sources */,

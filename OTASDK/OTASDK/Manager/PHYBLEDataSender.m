@@ -8,6 +8,7 @@
 
 #import "PHYBLEDataSender.h"
 #import "JCDataConvert.h"
+#import "PHYOTASDKLogger.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,7 +32,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)sendData:(NSData *)data peripheral:(CBPeripheral *)peripheral charUUID:(NSString *)charUUID noResponse:(BOOL)noResponse {
-    NSLog(@"发送指令：%@",[JCDataConvert convertDataToHexStr:data]);
+    NSString *hexStr = [JCDataConvert convertDataToHexStr:data];
+    NSLog(@"发送指令：%@",hexStr);
+    [[PHYOTASDKLogger sharedLogger] logSend:@"DataSender"
+                                    message:[NSString stringWithFormat:@"写入特征%@，%@", charUUID, noResponse ? @"无响应模式" : @"有响应模式"]
+                                    hexData:hexStr
+                                 deviceName:peripheral.name
+                                 deviceUUID:peripheral.identifier.UUIDString];
     NSString *uuid = peripheral.identifier.UUIDString;
     if (!noResponse) {
         @synchronized (self) {
@@ -62,7 +69,14 @@ NS_ASSUME_NONNULL_BEGIN
     @synchronized (self) {
         NSMutableArray *q = self.cmdQueueMap[uuid];
         if (q && q.count>0) {
-            NSLog(@"指令发送成功：%@",q[0]);
+            NSData *confirmedData = q[0];
+            NSString *hexStr = [JCDataConvert convertDataToHexStr:confirmedData];
+            NSLog(@"指令发送成功：%@", hexStr);
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"DataSender"
+                                            message:[NSString stringWithFormat:@"写入确认成功: %@", hexStr]
+                                            hexData:hexStr
+                                         deviceName:peripheral.name
+                                         deviceUUID:peripheral.identifier.UUIDString];
             [q removeObjectAtIndex:0];//将发送成功的指令从队列中移除
             
             if (q.count>0) {    //如果还有指令在队列中等待发送

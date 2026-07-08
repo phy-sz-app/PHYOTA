@@ -36,7 +36,9 @@
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://cdn.jsdelivr.net/cocoapods-specs/all_pods.txt\")",
       "WebFetch(domain:cocoapods.org)",
-      "Bash(xcodebuild *)"
+      "Bash(xcodebuild *)",
+      "Read(//Users/dilu/Library/Developer/Xcode/DerivedData/iOSPHYOTATest-aeaeuzakrcrncnabunjzpftvchcs/Build/Products/Debug-iphonesimulator/OTASDK.framework/Modules/OTASDK.swiftmodule/**)",
+      "Read(//Users/dilu/Library/Developer/Xcode/DerivedData/iOSPHYOTATest-aeaeuzakrcrncnabunjzpftvchcs/Build/Products/Debug-iphonesimulator/OTASDK.framework/Modules/**)"
     ]
   }
 }

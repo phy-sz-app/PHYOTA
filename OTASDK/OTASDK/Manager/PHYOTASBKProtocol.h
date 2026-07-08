@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PHYOTASBKProtocol : NSObject
 @property (nonatomic, weak) PHYBLEDataSender *dataSender;
+@property (nonatomic, strong) dispatch_queue_t callbackQueue;
 @property (nonatomic, strong) PHYFileHandle *fileDetail;
 @property (nonatomic, weak) id<PHYOTASBKProtocolDelegate> delegate;
 

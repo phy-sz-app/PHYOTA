@@ -11,5 +11,6 @@
 #import "OTASDK/JCDataConvert.h"
 #import "OTASDK/PHYBLEManager.h"
 #import "OTASDK/PHYBLEModel.h"
+#import "OTASDK/PHYOTASDKLogger.h"
 
 #endif /* OTASDK_Bridging_Header_h */

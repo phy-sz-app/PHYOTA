@@ -16,6 +16,7 @@
 #import "PHYBLEModel.h"
 #import "JCDataConvert.h"
 #import "PHYOTAType.h"
+#import "PHYOTASDKLogger.h"
 
 @interface PHYBLEManager ()
 <CBCentralManagerDelegate,
@@ -68,6 +69,7 @@ PHYOTASBKProtocolDelegate>
 
         _slbProtocol.dataSender = _dataSender;
         _sbkProtocol.dataSender = _dataSender;
+        _sbkProtocol.callbackQueue = _bleQueue;
 
         _deviceArray = [NSMutableArray array];
 
@@ -292,6 +294,10 @@ PHYOTASBKProtocolDelegate>
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
     [self.connManager connectionManagerDidConnect:peripheral];
     [self updateDevice:peripheral type:ServicesDiscovering message:@"连接成功，发现服务中"];
+    [[PHYOTASDKLogger sharedLogger] logEvent:@"BLEManager"
+                                     message:@"设备已连接"
+                                  deviceName:peripheral.name
+                                  deviceUUID:peripheral.identifier.UUIDString];
     
     dispatch_async(self.bleQueue, ^{
         peripheral.delegate = self;
@@ -302,6 +308,10 @@ PHYOTASBKProtocolDelegate>
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     [self.connManager connectionManagerDidDisconnect:peripheral error:error];
     PHYBLEModel *model = [self findModelByPeripheral:peripheral];
+    [[PHYOTASDKLogger sharedLogger] logEvent:@"BLEManager"
+                                     message:[NSString stringWithFormat:@"设备已断开: %@", error ? error.localizedDescription : @"正常断开"]
+                                  deviceName:peripheral.name
+                                  deviceUUID:peripheral.identifier.UUIDString];
     [self.dataSender clearQueueForUUID:peripheral.identifier.UUIDString];
 
     // 取消模式切换断连计时器（设备已断开，无需强制断连）
@@ -519,11 +529,22 @@ PHYOTASBKProtocolDelegate>
     PHYBLEModel *model = [self findModelByPeripheral:peripheral];
     
     dispatch_async(self.bleQueue, ^{
+        NSString *hexStr = [JCDataConvert convertDataToHexStr:data];
         if ([characteristic.UUID.UUIDString isEqualToString:SLB_NOTIFYCharacteristic_ID] || [characteristic.UUID.UUIDString isEqualToString:SLB_NOTIFYChara_SHORT]) {
-            NSLog(@"receive SLB %@ data: %@ ", peripheral.name, [JCDataConvert convertDataToHexStr:data]);
+            NSLog(@"receive SLB %@ data: %@ ", peripheral.name, hexStr);
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"BLEManager"
+                                            message:[NSString stringWithFormat:@"SLB通知收到: %@", hexStr]
+                                            hexData:hexStr
+                                         deviceName:peripheral.name
+                                         deviceUUID:peripheral.identifier.UUIDString];
             [self.slbProtocol parseNotifyData:data model:model];
         } else if([characteristic.UUID.UUIDString isEqualToString:SBK_OTA_NOTIFY_Characteristic]){
-            NSLog(@"receive SBK %@ data: %@ ", peripheral.name, [JCDataConvert convertDataToHexStr:data]);
+            NSLog(@"receive SBK %@ data: %@ ", peripheral.name, hexStr);
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"BLEManager"
+                                            message:[NSString stringWithFormat:@"SBK通知收到: %@", hexStr]
+                                            hexData:hexStr
+                                         deviceName:peripheral.name
+                                         deviceUUID:peripheral.identifier.UUIDString];
             [self.sbkProtocol parseNotifyData:data model:model];
         }
     });
@@ -566,7 +587,7 @@ PHYOTASBKProtocolDelegate>
     }
 }
 
-/// 发送0102/0103后启动2秒断连计时器：若设备未自动断开，则强制断开
+/// 发送0102/0103后启动5秒断连计时器：若设备未自动断开，则强制断开
 - (void)startModeSwitchDisconnectTimer:(CBPeripheral *)peripheral {
     PHYBLEModel *model = [self findModelByPeripheral:peripheral];
     if (!model) return;
@@ -577,7 +598,7 @@ PHYOTASBKProtocolDelegate>
     }
 
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.bleQueue);
-    dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
+    dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 0);
 
     __weak typeof(self) weakSelf = self;
     __weak typeof(CBPeripheral *) weakPeripheral = peripheral;
@@ -587,7 +608,7 @@ PHYOTASBKProtocolDelegate>
 
         CBPeripheral *p = weakPeripheral;
         if (p.state == CBPeripheralStateConnected) {
-            NSLog(@"模式切换超时(2s)，强制断开蓝牙连接");
+            NSLog(@"模式切换超时(5s)，强制断开蓝牙连接");
             [strongSelf.connManager cancelConnection:p central:strongSelf.myCentralManager];
         }
 

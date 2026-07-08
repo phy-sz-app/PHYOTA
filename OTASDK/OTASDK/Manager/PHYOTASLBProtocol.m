@@ -8,6 +8,7 @@
 
 #import "PHYOTASLBProtocol.h"
 #import "JCDataConvert.h"
+#import "PHYOTASDKLogger.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,6 +33,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
     NSData *commandData = [self newSegmMesg:MESG_OPCO_ISSU_VERS_REQU encr:NO data:[JCDataConvert hexToBytes:@"00"] totalSize:1 current:0 model:model];
     NSString *charaStr = model.mSLBContext.isShortUUID ? SLB_WRITEChara_SHORT : SLB_WRITECharacteristic_ID;
     [self.dataSender sendData:commandData peripheral:model.peripheral charUUID:charaStr noResponse:NO];
+    [[PHYOTASDKLogger sharedLogger] logSend:@"SLBProtocol"
+                                    message:@"获取设备固件版本(0x20)"
+                                    hexData:[JCDataConvert convertDataToHexStr:commandData]
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
 }
 
 // totalSize代表的是当前一个块有多少帧,encr:数据加密指示,data:负载部分，frag：总拆包帧数，current：当前帧序号，从0开始。
@@ -66,6 +72,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
     switch (respondType) {
         
         case MESG_OPCO_RESP_VERS_REQU:{
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"SLBProtocol"
+                                            message:@"收到固件版本响应(0x21)"
+                                            hexData:[JCDataConvert convertDataToHexStr:data]
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
             if (data.length == 9 || data.length >= 13) {
                 //新版本固件 data.length：13，  收到数据：01210009002262030105000000
                 //旧版本固件 data.length：9，   收到数据：012100050000000100
@@ -97,6 +108,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
         }
             break;
         case MESG_OPCO_RESP_OTAS_REQU:{
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"SLBProtocol"
+                                            message:@"收到升级请求响应(0x23)"
+                                            hexData:[JCDataConvert convertDataToHexStr:data]
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
             //获取23指令中固件端是否允许升级的标志位
             int isFWAllowOTA = [JCDataConvert dataToInt:[data subdataWithRange:NSMakeRange(4, 1)]];
             if (isFWAllowOTA == 0x01) {
@@ -107,6 +123,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
             break;
         }
         case MESG_OPCO_RESP_OTAS_SEGM:{
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"SLBProtocol"
+                                            message:@"收到数据段确认(0x24)"
+                                            hexData:[JCDataConvert convertDataToHexStr:data]
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
             int frameNumber = [self frameNumberCheck:data];
             NSInteger confirmLength = [JCDataConvert dataToInt:[data subdataWithRange:NSMakeRange(5, 4)]]; //confirmLength已确认字节数，dataIndex为字符数
             if (frameNumber == -1) {
@@ -132,6 +153,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
             break;
         }
         case MESG_OPCO_RESP_OTAS_COMP:{
+            [[PHYOTASDKLogger sharedLogger] logRecv:@"SLBProtocol"
+                                            message:@"收到升级完成响应(0x26)"
+                                            hexData:[JCDataConvert convertDataToHexStr:data]
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
             [self SLBStepThree:data model:model];
             break;
         }
@@ -172,7 +198,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
     NSData *commandData = [self newSegmMesg:MESG_OPCO_ISSU_OTAS_REQU encr:NO data:[JCDataConvert hexToBytes:commandStr] totalSize:1 current:0 model:model];
     NSString *charaStr = model.mSLBContext.isShortUUID ? SLB_WRITEChara_SHORT : SLB_WRITECharacteristic_ID;
     [self.dataSender sendData:commandData peripheral:model.peripheral charUUID:charaStr noResponse:NO];
-    
+    [[PHYOTASDKLogger sharedLogger] logSend:@"SLBProtocol"
+                                    message:@"发送升级请求及固件信息(0x22)"
+                                    hexData:[JCDataConvert convertDataToHexStr:commandData]
+                                 deviceName:model.peripheral.name
+                                 deviceUUID:model.peripheral.identifier.UUIDString];
 }
 
 //检查是否发现异常，如果出现异常，则从丢包处重传
@@ -258,7 +288,14 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
         NSString *cmd = [SLBDataStr substringWithRange:NSMakeRange(model.mSLBContext.dataIndex, model.MTUSize*2)];
         NSData *commandData = [self newSegmMesg:MESG_OPCO_ISSU_OTAS_SEGM encr:NO data:[JCDataConvert stringToHexData:cmd] totalSize:mBinsFrsz current:(int)currentCount model:model];
         [self.dataSender sendData:commandData peripheral:model.peripheral charUUID:charaStr noResponse:YES];
-        
+        if (currentCount == 0) {
+            [[PHYOTASDKLogger sharedLogger] logSend:@"SLBProtocol"
+                                            message:[NSString stringWithFormat:@"发送固件数据(0x2F) 帧起始 dataIndex:%lu", (unsigned long)model.mSLBContext.dataIndex]
+                                            hexData:[JCDataConvert convertDataToHexStr:commandData]
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
+        }
+
         model.mSLBContext.dataIndex += model.MTUSize * 2;
         currentCount = (currentCount+1) % 16;
     }else if (model.mSLBContext.dataIndex < SLBDataStr.length) {
@@ -285,6 +322,11 @@ UInt8 const MESG_OPCO_RESP_OTAS_COMP = 0x26;//上报固件校验结果
             NSData *commandData = [self newSegmMesg:MESG_OPCO_ISSU_OTAS_COMP encr:NO data:[JCDataConvert hexToBytes:@"01"] totalSize:1 current:0 model:model];
             NSString *writeCharaStr = model.mSLBContext.isShortUUID ? SLB_WRITEChara_SHORT : SLB_WRITECharacteristic_ID;
             [self.dataSender sendData:commandData peripheral:model.peripheral charUUID:writeCharaStr noResponse:NO];
+            [[PHYOTASDKLogger sharedLogger] logSend:@"SLBProtocol"
+                                            message:@"通知固件发送完成并进行校验(0x25)"
+                                            hexData:[JCDataConvert convertDataToHexStr:commandData]
+                                         deviceName:model.peripheral.name
+                                         deviceUUID:model.peripheral.identifier.UUIDString];
         }
     }
 }

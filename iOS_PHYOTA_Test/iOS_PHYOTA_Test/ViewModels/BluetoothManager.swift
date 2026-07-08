@@ -54,6 +54,7 @@ class BluetoothManager: NSObject, ObservableObject {
     override init() {
         super.init()
         bleManager.delegate = self
+        PHYOTASDKLogger.shared().delegate = self
         
         // 添加初始化日志
         logManager.addLog(level: .info, source: "BluetoothManager", message: "蓝牙管理器初始化完成")
@@ -170,6 +171,31 @@ class BluetoothManager: NSObject, ObservableObject {
         for device in devices {
             selectedDeviceUUIDs.insert(device.uuid)
         }
+    }
+}
+
+// MARK: - PHYOTASDKLoggerDelegate
+extension BluetoothManager: PHYOTASDKLoggerDelegate {
+    func otaSDKLoggerDidAdd(_ entry: PHYOTASDKLogEntry) {
+        let level: LogLevel
+        switch entry.level {
+        case .debug: level = .debug
+        case .info: level = .info
+        case .warning: level = .warning
+        case .error: level = .error
+        @unknown default: level = .info
+        }
+
+        let deviceName = entry.deviceName
+        let deviceID = entry.deviceUUID
+
+        var message = entry.message
+        if let hex = entry.hexData, !hex.isEmpty {
+            message += " [\(hex)]"
+        }
+
+        logManager.addLog(level: level, source: "SDK-\(entry.source)", message: message,
+                         deviceID: deviceID, deviceName: deviceName)
     }
 }
 
