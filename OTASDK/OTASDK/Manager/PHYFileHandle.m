@@ -157,6 +157,7 @@
         if (result.length > 0) {
             Partition *partition = [[Partition alloc] initWithAddress:*addressPtr content:result];
             [self.fileResult addObject:partition];
+            [result setString:@""]; // 清空result，防止下一条结束记录重复添加
         }
         return;
     }
